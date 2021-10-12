@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            background-color: teal;
+        }
+        input {
+            width: 200px;
+            background-color: white;
+        }
+
+        #movies {
+            width: 206px;
+            height: 300px;
+            border-top: none;
+            overflow: scroll;
+            border: 1px solid black;
+            background-color: white;
+
+        }
+
+        #topbar{
+            display: flex;
+            width: 100%;
+            height: 50px;
+            background-color: black;
+            color: white;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    
+        <h1  id="topbar">Movie App</h1>
+    
+    
+    <input oninput="debounce(main,1000)" type="text" id="movie" placeholder="Enter movie name" />
+    <div id="movies"></div>
+</body>
+
+</html>
+
+<script>
+
+    //search movies
+    var timeId;
+
+    let movies_div=document.getElementById("movies");
+
+    ////////////////////////////////////////////////////////////////SEARCH MOVIE
+
+    async function searchMovies(movie_name) {
+
+        try {
+            let res = await fetch(`https://www.omdbapi.com/?s=${movie_name}&apikey=4b125d6`);
+
+            let data = await res.json();
+            return data;
+        }catch(e){
+            console.log("e:",e);
+        }
+       
+    }
+    /////////////////////////////////////////////////////////////
+   function appendMovies(movies){
+    
+
+
+    movies_div.innerHTML=null;
+
+    if(movies===undefined){
+        // img.src="https://media1.giphy.com/media/xTiN0L7EW5trfOvEk0/giphy.gif";
+        console.log("error")
+    }
+
+    movies.forEach(function(movies){
+
+        let p=document.createElement('p');
+        p.innerText=movies.Title;
+
+        p.onclick=function(){
+            poster(movies);
+        }
+
+        movies_div.append(p);
+    });
+   }
+///////////////////////////////////////////////////////////MAIN FUNCTION
+    async function main(){
+       let name=document.getElementById("movie").value;
+
+        let res=await searchMovies(name);
+        let movies_data=res.Search;
+        appendMovies(movies_data);
+        console.log(res);
+   }
+/////////////////////////////////////////////////////////////////
+   function debounce(func,delay){
+
+    //func===main ;
+    if(timeId){
+        clearTimeout(timeId)
+    }
+
+    timeId=setTimeout (function(){
+        func();
+
+    },delay);
+
+   }
+
+   //////////////////////////////////////////////////////////////////
+   function poster(a){
+    
+   
+    if(localStorage.getItem("movie")==null){
+        localStorage.setItem("movie",JSON.stringify([]))
+    }
+
+    let movie=JSON.parse(localStorage.getItem("movie"));
+
+    movie.push(a);
+
+    localStorage.setItem("movie",JSON.stringify(movie))
+
+    window.location.href="display.html";
+
+   }
+
+
+
+
+</script>

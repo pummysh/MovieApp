@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #display{
+            padding-top: 100px;
+            display: flex;
+            text-align: center;
+            margin: auto;
+            width: 200px;
+            font-weight: bold;
+        }
+        img{
+            width: 100%;
+            height: 150px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="display"></div>
+    
+</body>
+</html>
+
+<script>
+    let parent=document.getElementById("display");
+    let a= JSON.parse(localStorage.getItem("movie"));
+    console.log(a);
+
+    function showProduct(a){
+
+        a.forEach(function(movie){
+            parent.innerHTML=null;
+
+            let div=document.createElement('div'); 
+
+            let img=document.createElement('img');
+            img.src=movie.Poster;
+
+            let year=document.createElement("p");
+            year.innerText="Released Date"+":"+movie.Year;
+
+            let name=document.createElement("p");
+            name.innerText="Title"+":"+movie.Title;
+
+            div.append(img,name,year);
+            parent.append(div);
+
+        })
+
+    }
+    showProduct(a);
+</script>
