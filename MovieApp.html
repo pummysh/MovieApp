@@ -7,9 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-        *{
-            background-color: teal;
+        * {
+            background-color: rgb(32, 5, 5);
         }
+
         input {
             width: 200px;
             background-color: white;
@@ -25,7 +26,7 @@
 
         }
 
-        #topbar{
+        #topbar {
             display: flex;
             width: 100%;
             height: 50px;
@@ -33,17 +34,30 @@
             color: white;
             justify-content: center;
         }
+
+        button {
+            display: flex;
+            background-color: whitesmoke;
+            
+        }
     </style>
 </head>
 
 <body>
 
+    <h1 id="topbar">Movie App</h1>
+    <div style="display: flex; justify-content: space-between;">
+        
+        <div>
+            <input oninput="debounce(main,1000)" type="text" id="movie" placeholder="Enter movie name" />
+            <div id="movies"></div>
+        </div>
+        <div>
+            <a href="trending.html"><button>Trending movies</button></a>
+        </div>
+    </div>
     
-        <h1  id="topbar">Movie App</h1>
-    
-    
-    <input oninput="debounce(main,1000)" type="text" id="movie" placeholder="Enter movie name" />
-    <div id="movies"></div>
+
 </body>
 
 </html>
@@ -53,7 +67,7 @@
     //search movies
     var timeId;
 
-    let movies_div=document.getElementById("movies");
+    let movies_div = document.getElementById("movies");
 
     ////////////////////////////////////////////////////////////////SEARCH MOVIE
 
@@ -64,76 +78,76 @@
 
             let data = await res.json();
             return data;
-        }catch(e){
-            console.log("e:",e);
+        } catch (e) {
+            console.log("e:", e);
         }
-       
+
     }
     /////////////////////////////////////////////////////////////
-   function appendMovies(movies){
-    
+    function appendMovies(movies) {
 
 
-    movies_div.innerHTML=null;
 
-    if(movies===undefined){
-        // img.src="https://media1.giphy.com/media/xTiN0L7EW5trfOvEk0/giphy.gif";
-        console.log("error")
-    }
+        movies_div.innerHTML = null;
 
-    movies.forEach(function(movies){
-
-        let p=document.createElement('p');
-        p.innerText=movies.Title;
-
-        p.onclick=function(){
-            poster(movies);
+        if (movies === undefined) {
+            // img.src="https://media1.giphy.com/media/xTiN0L7EW5trfOvEk0/giphy.gif";
+            console.log("error")
         }
 
-        movies_div.append(p);
-    });
-   }
-///////////////////////////////////////////////////////////MAIN FUNCTION
-    async function main(){
-       let name=document.getElementById("movie").value;
+        movies.forEach(function (movies) {
 
-        let res=await searchMovies(name);
-        let movies_data=res.Search;
+            let p = document.createElement('p');
+            p.innerText = movies.Title;
+
+            p.onclick = function () {
+                poster(movies);
+            }
+
+            movies_div.append(p);
+        });
+    }
+    ///////////////////////////////////////////////////////////MAIN FUNCTION
+    async function main() {
+        let name = document.getElementById("movie").value;
+
+        let res = await searchMovies(name);
+        let movies_data = res.Search;
         appendMovies(movies_data);
         console.log(res);
-   }
-/////////////////////////////////////////////////////////////////
-   function debounce(func,delay){
+    }
+    /////////////////////////////////////////////////////////////////
+    function debounce(func, delay) {
 
-    //func===main ;
-    if(timeId){
-        clearTimeout(timeId)
+        //func===main ;
+        if (timeId) {
+            clearTimeout(timeId)
+        }
+
+        timeId = setTimeout(function () {
+            func();
+
+        }, delay);
+
     }
 
-    timeId=setTimeout (function(){
-        func();
+    //////////////////////////////////////////////////////////////////
+    function poster(a) {
 
-    },delay);
 
-   }
+        if (localStorage.getItem("movie") == null) {
+            localStorage.setItem("movie", JSON.stringify([]))
+        }
 
-   //////////////////////////////////////////////////////////////////
-   function poster(a){
-    
-   
-    if(localStorage.getItem("movie")==null){
-        localStorage.setItem("movie",JSON.stringify([]))
+        let movie = JSON.parse(localStorage.getItem("movie"));
+
+        movie.push(a);
+
+        localStorage.setItem("movie", JSON.stringify(movie))
+
+        window.location.href = "display.html";
+
     }
-
-    let movie=JSON.parse(localStorage.getItem("movie"));
-
-    movie.push(a);
-
-    localStorage.setItem("movie",JSON.stringify(movie))
-
-    window.location.href="display.html";
-
-   }
 
 
 

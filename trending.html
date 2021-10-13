@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            background-color: rgb(32, 5, 5);
+        }
+        h1{
+            color: whitesmoke;
+        }
+        button{
+            border-radius: 5px;
+        }
+       #box{
+            display: grid;
+            grid-template-columns: repeat(4,20%);
+            grid-gap: 5%;
+            color: whitesmoke;
+            text-align: center;
+        }
+        img{
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="box"></div>
+
+</body>
+</html>
+
+<script>
+    let cont=document.getElementById('box');
+
+    async function data(){
+        let res=await fetch(`https://api.themoviedb.org/4/list/1?api_key=810be2a40c65323ffb597cd7215b5696`);
+
+        let data=await res.json();
+       showMovie(data.results);
+    }
+    data();
+
+    function showMovie(a){
+        
+        a.forEach(function(m){
+
+            let div=document.createElement('div');
+
+            let img=document.createElement('img');
+            
+            img.src=`https://image.tmdb.org/t/p/w500${m.poster_path}`
+
+            let title=document.createElement('p');
+            title.innerHTML="Title"+" "+m.title;
+
+            let type=document.createElement('p');
+            type.innerHTML="Type"+" "+m.media_type;
+
+            let date=document.createElement('p');
+            date.innerHTML="Released Date"+" "+m.release_date;
+
+            div.append(img,title,type,date);
+
+            box.append(div)
+
+        })
+
+    }
+
+</script>
