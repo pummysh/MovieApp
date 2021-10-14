@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+     
+        #vedios{
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(4,auto);
+            padding-top: 100px;
+            padding-left: 100px;
+        }
+        #nav{
+          background-color: white;
+          position: fixed;
+          z-index: 10000;
+          width: 100%;
+          height: 80px;
+          display: flex;
+          left: 0;
+          top:0;
+        }
+        #logo{
+          position: relative;
+          margin-left: 90px;
+          width: 10%;
+          height: 70px;
+          margin-top: 20px;
+        }
+        img{
+          width: 100%;
+        }
+        #search{
+          display: flex;
+          width: 40%;
+          height: 50px;
+          box-sizing: border-box;
+          margin: auto;
+          margin-right: 100px;
+          border: 1px solid whitesmoke;
+        }
+        #query{
+          width: 85%;
+          height: 100%;
+          box-sizing: border-box;
+          background-color: whitesmoke;
+        }
+        button{
+          flex-grow: 1;
+          width: 15%;
+          height: 98%;
+          border-left: none;
+          box-sizing: border-box;
+          background-color: whitesmoke;
+        }
+        button>img{
+          width: 30px;
+         height: 30px;
+        }
+        #box{
+          display: flex;
+        }
+        #sidenav{
+          background-color: white;
+          position: fixed;
+          z-index: 1;
+          top: 0;
+          left: 0;
+          
+          height: 100%;
+          width: 80px;
+        }
+        #icon1>a{
+          display: flex;
+          margin-top: 30px;
+          width: 80%;
+
+        }
+        header{
+          border-bottom: 1px solid black
+        }
+        img{
+          width: 100%;
+        }
+        .sidelogo{
+          width: 20%;
+          display: flex;
+          margin: auto;
+        }
+        .sidelogo>div{
+          width: 15%;
+          margin: 8px;
+        }
+        
+    </style>
+  </head>
+  <body>
+    <header id="nav">
+
+      <div id="logo">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/YouTube_Logo_2017.svg/2560px-YouTube_Logo_2017.svg.png" alt="">
+      </div>
+      
+      <div id="search">
+        <input type="text" id="query" placeholder="Search for a Video" />
+        <button onclick="searchVideos()">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Search_Icon.svg/1024px-Search_Icon.svg.png" alt="">
+        </button>
+      </div>
+
+      <div class="sidelogo">
+        <div>
+          <img src="https://freepngimg.com/download/youtube/76608-freemake-production-video-icon-downloader-download-free-image.png" alt="">
+        </div>
+        <div>
+          <img src="https://cdn.icon-icons.com/icons2/1369/PNG/512/-apps_90405.png" alt="">
+        </div>
+        <div>
+          <img src="https://cdn.iconscout.com/icon/premium/png-256-thumb/notification-142-647836.png" alt="">
+        </div>
+        <div>
+          <img src="https://cdn.iconscout.com/icon/free/png-256/account-avatar-profile-human-man-user-30448.png" alt="">
+        </div>
+  
+      </div>
+
+      
+    </header>
+    
+
+    <div id=box>
+      <div id="sidenav">
+        <div style="width: 70%; margin: auto;margin-top: 14px;">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQJzk_iYgTcybqXXA1008mHP-mLUdv__Yd0A&usqp=CAU" alt="">
+          <div id="icon1">
+            <a > 
+              <img src="https://cdn.icon-icons.com/icons2/2248/PNG/512/home_circle_icon_137496.png" alt="">
+            </a>
+            <a >
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2zbc5ynX088ahRLrl2oUnJomcbWH1huGKuA&usqp=CAU" alt="">
+            </a>
+            <a >
+              <img src="https://static.thenounproject.com/png/456180-200.png" alt="">
+            </a>
+            <a >
+              <img src="https://www.kindpng.com/picc/m/82-823615_video-resume-play-video-icon-png-transparent-png.png" alt="">
+            </a>
+          </div>
+        </div>
+      </div>
+
+        <div id="vedios"></div>
+    </div>
+
+    
+    
+  </body>
+</html>
+
+<script>
+
+async function showvideo(){
+  let res=await fetch(`https://youtube.googleapis.com/youtube/v3/videos?part=snippet&chart=mostPopular&regionCode=IN&key=AIzaSyBC39RwqeshjBeAjB2kH4vQPWrHAd0bgJY&maxResults=20`);
+
+  let data=await res.json();
+  // console.log("data:",data);
+  display(data.items);
+}
+showvideo();
+
+function display(items){
+  console.log("items:",items)
+  items.forEach(({id})=>{
+    let div=document.createElement("div");
+    div.innerHTML=`<iframe width="360" height="215"src="https://www.youtube.com/embed/${id}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`
+    vedios.append(div);
+  })
+  
+}
+
+
+let vedios=document.getElementById('vedios')
+
+async function searchVideos(){
+
+let query=document.getElementById("query").value;
+
+let res=await fetch(`https://youtube.googleapis.com/youtube/v3/search?q=${query}&type=video&key=AIzaSyBC39RwqeshjBeAjB2kH4vQPWrHAd0bgJY&maxResults=20&part=snippet`)
+
+let data=await res.json();
+appendVedios(data.items);
+// console.log(data);
+
+}
+
+
+
+function appendVedios(video_data){
+  console.log(video_data);
+  vedios.innerHTML=null;
+
+ video_data.forEach(({id: { videoId }}) => {
+
+  
+
+    let div=document.createElement("div");
+
+    div.innerHTML=`<iframe width="360" height="215"src="https://www.youtube.com/embed/${videoId}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`
+    vedios.append(div);
+ });
+
+}
+
+
+
+</script>
