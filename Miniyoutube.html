@@ -4,15 +4,21 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>YouTube</title>
     <style>
      
         #vedios{
-            width: 100%;
-            display: grid;
-            grid-template-columns: repeat(4,auto);
-            padding-top: 100px;
-            padding-left: 100px;
+          width: 100%;
+          padding-top: 100px;
+          padding-left: 100px;
+           
+        }
+        #front{
+          width: 100%;
+          padding-top: 100px;
+          grid-template-columns: repeat(4,auto);
+          display: grid;
+          gap: 1%;
         }
         #nav{
           background-color: white;
@@ -95,6 +101,17 @@
           width: 15%;
           margin: 8px;
         }
+        #details{
+          display: flex;
+          gap: 20px;
+        }
+        #profile{
+          border: none;
+          background-color: white;
+          color: red;
+          font-weight: bold;
+          font-size: larger;
+        }
         
     </style>
   </head>
@@ -122,9 +139,11 @@
         <div>
           <img src="https://cdn.iconscout.com/icon/premium/png-256-thumb/notification-142-647836.png" alt="">
         </div>
-        <div>
-          <img src="https://cdn.iconscout.com/icon/free/png-256/account-avatar-profile-human-man-user-30448.png" alt="">
-        </div>
+        <a href="youtubeSignup.html">
+          <button id="profile">
+            <img src="https://cdn.iconscout.com/icon/free/png-256/account-avatar-profile-human-man-user-30448.png" alt="">
+          </button>
+        </a>
   
       </div>
 
@@ -154,6 +173,7 @@
       </div>
 
         <div id="vedios"></div>
+        <div id="front"></div>
     </div>
 
     
@@ -162,7 +182,7 @@
 </html>
 
 <script>
-
+ let front=document.getElementById('front');
 async function showvideo(){
   let res=await fetch(`https://youtube.googleapis.com/youtube/v3/videos?part=snippet&chart=mostPopular&regionCode=IN&key=AIzaSyBC39RwqeshjBeAjB2kH4vQPWrHAd0bgJY&maxResults=20`);
 
@@ -177,7 +197,7 @@ function display(items){
   items.forEach(({id})=>{
     let div=document.createElement("div");
     div.innerHTML=`<iframe width="360" height="215"src="https://www.youtube.com/embed/${id}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`
-    vedios.append(div);
+    front.append(div);
   })
   
 }
@@ -202,19 +222,38 @@ appendVedios(data.items);
 function appendVedios(video_data){
   console.log(video_data);
   vedios.innerHTML=null;
+  front.innerHTML=null;
+ video_data.forEach(({id: { videoId},snippet:{title,description,channelTitle}}) => {
 
- video_data.forEach(({id: { videoId }}) => {
-
-  
-
+    let div2=document.createElement('div');
+    div2.id="details";
     let div=document.createElement("div");
+    let vedio=document.createElement('div')
+    
+    vedio.innerHTML=`<iframe width="560" height="315"src="https://www.youtube.com/embed/${videoId}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`
 
-    div.innerHTML=`<iframe width="360" height="215"src="https://www.youtube.com/embed/${videoId}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`
-    vedios.append(div);
+    let name=document.createElement('p');
+    name.innerHTML=title;
+
+    let ch=document.createElement('p');
+    ch.innerHTML=description;
+
+    let ds=document.createElement('p');
+    ds.innerHTML=channelTitle;
+
+    div.append(name,ch,ds)
+    div2.append(vedio,div);
+    vedios.append(div2);
  });
+
 
 }
 
-
+let u=JSON.parse(localStorage.getItem("check"));
+console.log(u);
+if(u.length>0){
+  document.getElementById("profile").textContent=u;
+}
 
 </script>
+
