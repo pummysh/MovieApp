@@ -54,6 +54,9 @@
             <div id="movies"></div>
         </div>
         <div>
+            <a href="movieSignup.html">
+                <button id="sign">Signup/login</button>
+            </a>
             <a href="trending.html"><button>Trending movies</button></a>
         </div>
     </div>
@@ -151,6 +154,10 @@
     }
 
 
-
+    let u=JSON.parse(localStorage.getItem("movie"));
+console.log(u);
+if(u.length>0){
+  document.getElementById("sign").textContent=u;
+}
 
 </script>
