@@ -114,7 +114,7 @@
     ///////////////////////////////////////////////////////////MAIN FUNCTION
     async function main() {
         let name = document.getElementById("movie").value;
-
+        if(name.length>3)return false;
         let res = await searchMovies(name);
         let movies_data = res.Search;
         appendMovies(movies_data);
