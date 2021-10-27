@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-image: url("https://www.zastavki.com/pictures/originals/2012/Backgrounds_Beautiful_background_035523_.jpg");
+        }
+
+        #box {
+            display: flex;
+            width: 60%;
+            margin: auto;
+            margin-top: 5px;
+            border: 2px solid black;
+        }
+
+        #box1 {
+            display: flex;
+            gap: 5px;
+            width: 60%;
+            margin: auto;
+            margin-top: 20px;
+        }
+
+        #box1>select {
+            width: 50%;
+            height: 30px;
+            font-family: 'Architects Daughter', cursive;
+            font-weight: bolder;
+        }
+
+        #in,
+        #op {
+            width: 50%;
+            height: 250px;
+            border: 2px solid rgb(90, 90, 231);
+            margin: 1%;
+            font-family: 'Architects Daughter', cursive;
+            font-weight: bold;
+        }
+
+        #btn {
+            width: 20%;
+            display: flex;
+            margin: auto;
+            margin-top: 10px;
+        }
+
+        button {
+            width: 50%;
+            margin: 5px;
+            padding: 0.5rem;
+            font-family: 'Architects Daughter', cursive;
+            font-weight: bolder;
+        }
+
+        button:hover {
+            background-color: rgb(46, 46, 196);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="box1">
+        <select id="slt2">
+            <option value="en">Select your language</option>
+        </select>
+        <select id="slt">
+            <option value="en">Conversion language</option>
+        </select>
+    </div>
+    <div id="box">
+        <textarea name="" id="in" cols="30" rows="10"></textarea>
+        <textarea id="op"></textarea>
+    </div>
+    <div id="btn">
+        <button id="trans" onclick="t()">Translate</button>
+        <button id="speak" onclick="speak()">Speak</button>
+        <button id="voice" onclick="voice()">Speakout</button>
+    </div>
+
+</body>
+
+</html>
+<script type="text/javascript" src="https://code.responsivevoice.org/responsivevoice.js
+"></script>
+<script>
+    let txt = document.getElementById("in").value;
+    let div = document.getElementById('slt');
+    let select = document.getElementById('slt2');
+    async function lan() {
+        let res = await fetch('https://libretranslate.de/languages');
+        let data = await res.json();
+        console.log(data);
+        appendlan(data, select);
+        appendlan(data, div);
+    }
+    lan();
+
+    function appendlan(data, b) {
+
+
+        data.forEach((a) => {
+            let o = document.createElement('option');
+            o.innerHTML = a.name;
+            o.value = a.code;
+            b.appendChild(o);
+        });
+
+    }
+
+    async function t() {
+        let txt = document.getElementById("in").value;
+
+        const res = await fetch("https://libretranslate.de/translate", {
+            method: "POST",
+            body: JSON.stringify({
+                q: `${txt}`,
+                source: `${select.value}`,
+                target: `${div.value}`
+            }),
+            headers: { "Content-Type": "application/json" }
+        });
+        let ans = await res.json();
+
+        document.getElementById('op').innerHTML = ans.translatedText;
+
+    }
+
+    function speak() {
+
+        var check = new webkitSpeechRecognition();
+        check.lang = "en-GB";
+        check.onspeechend = function () {
+            check.stop();
+        }
+        check.onresult = (event) => {
+            document.getElementById('in').innerHTML = event.results[0][0].transcript;
+
+        }
+        check.start();
+    }
+
+    function voice(){
+        let txt = document.getElementById('op').innerHTML;
+        responsiveVoice.speak(txt);
+    }
+    // function voice() {
+
+    //     let txt = document.getElementById('op').innerHTML;
+    //     const v = new SpeechSynthesisUtterance(txt)
+    //     // v.lang='hi-IN';
+    //     // var myLang = speechSynthesisUtteranceInstance.lang;
+    //     speechSynthesisUtteranceInstance.lang = 'hi-IN';
+    //     v.rate = 1;
+    //     speechSynthesis.speak(v);
+
+    // }
+
+</script>
